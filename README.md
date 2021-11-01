@@ -1,21 +1,16 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/72c79a99b2c34d92b3fc495f5a455735)](https://www.codacy.com/gh/CC21-EDW/edw-component/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CC21-EDW/edw-component&amp;utm_campaign=Badge_Grade)
+[![DepShield Badge](https://depshield.sonatype.org/badges/CC21-EDW/edw-component/depshield.svg)](https://depshield.github.io)
+![Build Status](https://github.com/CC21-EDW/edw-component/workflows/CI/badge.svg)
+
 # edw-component
-A template to use when starting a new open source project.
+Base component used for service connectors providing base functionality
 
-## perform a repository wide search and replace for "edw-component" and the "target-repo-name"
+## Tech-Stack
+- SpringBoot
+- Rest
 
-e.g. by using
+## Releasing
 
-```
-cp -R edw-component/ new-name && cd new-name && git config --local --unset remote.origin.url && git config --local --add remote.origin.url git@github.com:baloise/new-name.git && git reset --hard $(git commit-tree FETCH_HEAD^{tree} -m "Initial contribution") &&  git grep -l 'edw-component' | xargs sed -i '' -e 's/edw-component/new-name/g' && mvn clean verify && git add -A && git commit -m "Rename from template to new-name" && cd ..
-```
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bf6fa237dd934970991ecba2c66db23e)](https://app.codacy.com/app/baloise/edw-component?utm_source=github.com&utm_medium=referral&utm_content=baloise/edw-component&utm_campaign=Badge_Grade_Dashboard)
-[![DepShield Badge](https://depshield.sonatype.org/badges/baloise/edw-component/depshield.svg)](https://depshield.github.io)
-![Build Status](https://github.com/baloise/edw-component/workflows/CI/badge.svg)
-
-## the [docs](docs/index.md)
-
-## releasing
-
-Run e.g. on main: `mvn -B release:prepare` e.g. via [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io#https://github.com/baloise/edw-component)
+Run e.g. on main: `mvn -B release:prepare`
 
 Subsequently the GitHub action worksflow "create release" will pick up the published tag and release and deploy the artifacts in the Github package registry.
