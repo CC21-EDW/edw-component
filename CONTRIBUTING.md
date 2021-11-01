@@ -1,6 +1,6 @@
-# Contributing to _repository-template-java_
+# Contributing to _edw-component_
 
-**Thank you for your interest in _repository-template-java_. Your contributions are highly welcome.**
+**Thank you for your interest in _edw-component_. Your contributions are highly welcome.**
 
 There are multiple ways of getting involved:
 

@@ -22,22 +22,22 @@
     <url>https://www.baloise.com</url>
   </organization>
 
-  <groupId>com.baloise.open.repository-template-java</groupId>
-  <artifactId>repository-template-java</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <groupId>com.baloise.open.edw-component</groupId>
+  <artifactId>edw-component</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <ciManagement>
     <system>Github Actions</system>
-    <url>https://github.com/baloise/repository-template-java/actions</url>
+    <url>https://github.com/CC21-EDW/edw-component/actions</url>
   </ciManagement>
 
-  <name>repository-template-java-main</name>
-  <url>https://github.com/baloise/repository-template-java</url>
+  <name>edw-component-main</name>
+  <url>https://github.com/CC21-EDW/edw-component</url>
 
   <scm>
-    <url>https://github.com/baloise/repository-template-java.git</url>
-    <connection>scm:git:https://github.com/baloise/repository-template-java.git</connection>
+    <url>https://github.com/CC21-EDW/edw-component.git</url>
+    <connection>scm:git:https://github.com/CC21-EDW/edw-component.git</connection>
     <tag>HEAD</tag>
   </scm>
   
@@ -45,7 +45,7 @@
      <repository>
        <id>github</id>
        <name>GitHub Baloise Apache Maven Packages</name>
-       <url>https://maven.pkg.github.com/baloise/repository-template-java</url>
+       <url>https://maven.pkg.github.com/CC21-EDW/edw-component</url>
      </repository>
   </distributionManagement>
 
