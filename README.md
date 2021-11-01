@@ -9,6 +9,14 @@ Base component used for service connectors providing base functionality
 ## Tech-Stack
 see https://github.com/CC21-EDW/documentation/blob/main/adr/003-technology-stack.md
 
+## Using Docker
+- Build image ``docker build . -t edw-component``
+- Build run image ``docker run -p 8080:8080 edw-component ``
+
+## Actuator
+- http://localhost:8080/actuator/health
+- http://localhost:8080/actuator/health
+
 ## Releasing
 
 Run e.g. on main: `mvn -B release:prepare`

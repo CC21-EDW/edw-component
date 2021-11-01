@@ -35,6 +35,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>edw-component</name>
   <description>Component providing EDW related base logic like KAFKA connector etc.</description>
+  <packaging>jar</packaging>
 
   <ciManagement>
     <system>Github Actions</system>
