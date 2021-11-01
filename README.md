@@ -6,8 +6,7 @@
 Base component used for service connectors providing base functionality
 
 ## Tech-Stack
-- SpringBoot
-- Rest
+see https://github.com/CC21-EDW/documentation/blob/main/adr/003-technology-stack.md
 
 ## Releasing
 

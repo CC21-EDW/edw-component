@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2021 Baloise Group
+ * Copyright 2021 Baloise Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baloise.open.template;
+package com.baloise.open.edw.edwcomponent;
 
-/**
- * @author Markus Tiede
- */
-public class App {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
+@SpringBootApplication
+public class EdwComponentApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EdwComponentApplication.class, args);
+	}
+
 }
