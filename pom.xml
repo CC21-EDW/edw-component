@@ -29,11 +29,13 @@
     <version>2.5.6</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
+
   <groupId>com.baloise.open.edw</groupId>
   <artifactId>edw-component</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>edw-component</name>
   <description>Component providing EDW related base logic like KAFKA connector etc.</description>
+
   <ciManagement>
     <system>Github Actions</system>
     <url>https://github.com/CC21-EDW/edw-component/actions</url>
@@ -58,6 +60,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>17</java.version>
+    <sonar.organization>cc21-edw</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.projectKey>CC21-EDW_edw-component</sonar.projectKey>
   </properties>
   <dependencies>
     <dependency>
