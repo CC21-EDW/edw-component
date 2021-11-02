@@ -24,7 +24,7 @@
 
   <groupId>com.baloise.open.edw-component</groupId>
   <artifactId>edw-component</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>jar</packaging>
 
   <ciManagement>
@@ -38,7 +38,7 @@
   <scm>
     <url>https://github.com/CC21-EDW/edw-component.git</url>
     <connection>scm:git:https://github.com/CC21-EDW/edw-component.git</connection>
-    <tag>HEAD</tag>
+    <tag>v0.0.2</tag>
   </scm>
 
   <distributionManagement>
