@@ -4,7 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.Properties;
 
-class ConsumerTest extends Consumer{
+class ConsumerTest extends Consumer {
 
   public ConsumerTest(Properties configProps, String topic, String clientId) {
     super(configProps, topic, clientId);
