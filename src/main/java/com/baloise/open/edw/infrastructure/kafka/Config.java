@@ -13,7 +13,7 @@ import java.util.Properties;
 
 public abstract class Config {
 
-  private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
+  private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
   @Getter(AccessLevel.PACKAGE)
   private final Properties configProps = new Properties();

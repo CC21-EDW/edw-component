@@ -21,7 +21,7 @@ class DateUtilTest {
   private final SimpleDateFormat localDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Test
-  public void localDateTimeToDate() {
+  void localDateTimeToDate() {
     LocalDateTime localDateTime = LocalDateTime.from(dateTimeFormatter.parse("2011-12-03T10:15:30"));
 
     Date d1 = DateUtil.convertToDate(localDateTime);
@@ -30,7 +30,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void localDateToDate() {
+  void localDateToDate() {
     LocalDate localDate = LocalDate.from(dateTimeFormatter.parse("2011-12-03T10:15:30"));
 
     Date d1 = DateUtil.convertToDate(localDate);
@@ -39,7 +39,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void dateToLocalDate() {
+  void dateToLocalDate() {
     Calendar cal = Calendar.getInstance();
     cal.set(2011, Calendar.DECEMBER, 24);
     Date date = cal.getTime();
@@ -50,7 +50,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void dateToLocalDateWithFallback() {
+  void dateToLocalDateWithFallback() {
     LocalDate localDateFallback = LocalDate.from(dateTimeFormatter.parse("2011-12-03T10:15:30"));
     LocalDate localDate = DateUtil.convertToLocalDate(null, localDateFallback);
 
@@ -58,26 +58,26 @@ class DateUtilTest {
   }
 
   @Test
-  public void createDate() {
+  void createDate() {
     assertEquals(localDateFormat.format(new Date()), localDateFormat.format(DateUtil.createDate()));
   }
 
   @Test
-  public void createDateWithParameters() {
+  void createDateWithParameters() {
     Date createdDate = DateUtil.createDate(1995, Month.DECEMBER.getValue(), 27);
 
     assertEquals("1995-12-27", localDateFormat.format(createdDate));
   }
 
   @Test
-  public void convertToTimestamp() {
+  void convertToTimestamp() {
     assertNull(DateUtil.convertToTimestamp(null));
     assertEquals("2012-01-26T08:12:34", simpleDateFormat.format(DateUtil.convertToTimestamp(LocalDateTime.of(2012, Month.JANUARY, 26, 8, 12, 34, 8))));
     assertEquals("2012-01-26T16:12:34", simpleDateFormat.format(DateUtil.convertToTimestamp(LocalDateTime.of(2012, Month.JANUARY, 26, 16, 12, 34, 8))));
   }
 
   @Test
-  public void getDaysBetween_LocalDate() {
+  void getDaysBetween_LocalDate() {
     LocalDate localDate1 = LocalDate.of(2020, Month.MARCH, 31);
     LocalDate localDate2 = LocalDate.of(2020, Month.APRIL, 3);
     assertEquals(3, DateUtil.getDaysBetween(localDate1, localDate2));
@@ -85,7 +85,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void getDaysBetween_LocalDateTime() {
+  void getDaysBetween_LocalDateTime() {
     LocalDateTime localDateTime1 = LocalDateTime.of(2020, Month.MARCH, 5, 15, 34, 16);
     LocalDateTime localDateTime2 = LocalDateTime.of(2020, Month.FEBRUARY, 29, 19, 15, 22);
     LocalDateTime localDateTime3 = LocalDateTime.of(2020, Month.FEBRUARY, 29, 7, 15, 22);
@@ -96,7 +96,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void removeTimeInfo() {
+  void removeTimeInfo() {
     assertNull(DateUtil.removeTimeInfo(null));
     String expectation = localDateFormat.format(new Date()) + "T00:00:00";
     Date dateWithoutTime = DateUtil.removeTimeInfo(new Date());
@@ -105,7 +105,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void adjustTimeInfo() {
+  void adjustTimeInfo() {
     assertNull(DateUtil.adjustTimeInfo(null, 0, 0, 0, 0));
     Date dateAdjusted = DateUtil.adjustTimeInfo(new Date(), 7, 8, 9, 10);
     String expectation = localDateFormat.format(new Date()) + "T07:08:09";
@@ -116,7 +116,7 @@ class DateUtilTest {
   }
 
   @Test
-  public void parseStringDates() {
+  void parseStringDates() {
     assertAll(
         () -> assertEquals(LocalDate.of(2021,Month.MAY, 1), DateUtil.parseAsDate("2021-05-01")),
         () -> assertEquals(LocalDate.of(1978,Month.DECEMBER, 19), DateUtil.parseAsDate("1978-12-19 00:00:00")),
