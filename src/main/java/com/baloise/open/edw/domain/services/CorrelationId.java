@@ -4,11 +4,11 @@ import org.slf4j.MDC;
 
 import java.util.HashMap;
 
-public class CorelationId {
+public class CorrelationId {
 
-  private static final String PREFIX = "CORELATION-ID";
+  private static final String PREFIX = "CORRELATION-ID";
 
-  private CorelationId() {
+  private CorrelationId() {
     // do not instantiate
     if (MDC.getCopyOfContextMap() == null) {
       MDC.setContextMap(new HashMap<>());
@@ -19,11 +19,11 @@ public class CorelationId {
     return MDC.get(PREFIX);
   }
 
-  public static void set(String corelationId) {
-    if (corelationId == null) {
+  public static void set(String correlationId) {
+    if (correlationId == null) {
       MDC.remove(PREFIX);
     } else {
-      MDC.put(PREFIX, corelationId);
+      MDC.put(PREFIX, correlationId);
     }
   }
 

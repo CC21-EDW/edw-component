@@ -1,7 +1,7 @@
 package com.baloise.open.edw.api;
 
 import com.baloise.open.edw.domain.dto.Problem;
-import com.baloise.open.edw.domain.services.CorelationId;
+import com.baloise.open.edw.domain.services.CorrelationId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class AbstractRestController {
 
   protected Response tryWithExceptionHandling(CheckedSupplier<Response> action) {
     try {
-      CorelationId.set("" + System.currentTimeMillis());
+      CorrelationId.set("" + System.currentTimeMillis());
       return action.apply();
     } catch (Exception e) {
       LOGGER.error(e.getMessage(), e);
@@ -24,7 +24,7 @@ public class AbstractRestController {
   private Problem getAsProblem(Exception e) {
     return Problem.builder()
         .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-        .cid(CorelationId.get())
+        .cid(CorrelationId.get())
         .title(e.getClass().getSimpleName())
         .detail(e.getMessage())
         .build();
@@ -34,7 +34,7 @@ public class AbstractRestController {
     final Problem problem = Problem.builder()
         .status(status.getStatusCode())
         .detail(message)
-        .cid(CorelationId.get())
+        .cid(CorrelationId.get())
         .title(title)
         .build();
     return Response.status(status).entity(problem).build();

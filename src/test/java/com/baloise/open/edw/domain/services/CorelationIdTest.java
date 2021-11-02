@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CorelationIdTest {
+class CorrelationIdTest {
 
   @Test
   void name() {
-    CorelationId.set("TEST123");
-    assertEquals("TEST123", CorelationId.get());
+    CorrelationId.set("TEST123");
+    assertEquals("TEST123", CorrelationId.get());
   }
 }

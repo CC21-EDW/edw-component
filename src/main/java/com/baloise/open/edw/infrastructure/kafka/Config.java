@@ -1,6 +1,6 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
-import com.baloise.open.edw.domain.services.CorelationId;
+import com.baloise.open.edw.domain.services.CorrelationId;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -33,7 +33,7 @@ public abstract class Config {
   private final String clientId;
 
   Config(Properties configProps, String topic, String clientId){
-    CorelationId.set(clientId + "-" + System.currentTimeMillis());
+    CorrelationId.set(clientId + "-" + System.currentTimeMillis());
     this.topic = topic;
     this.clientId = clientId;
     initDefaultProps(this.configProps);

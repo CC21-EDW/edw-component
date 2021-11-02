@@ -38,6 +38,12 @@ final Producer producer = new Producer(new Properties(), "CC21_EDW_2128", "strav
 producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World").get();
 ```
 
+### Logging
+In order to support the logging of correlation IDs, the slf4j log pattern needs to contain ```[%X{CORRELATION-ID}]```
+```
+<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - [%X{CORRELATION-ID}] %msg%n"/>
+```
+
 ## Releasing
 
 Run e.g. on main: `mvn -B release:prepare`
