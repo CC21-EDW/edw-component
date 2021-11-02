@@ -9,10 +9,11 @@ import javax.ws.rs.core.Response;
 import java.lang.invoke.MethodHandles;
 
 public class AbstractRestController {
-  protected static final Logger LOGGER = LoggerFactory.getLogger("APPL." + MethodHandles.lookup().lookupClass());
+  protected static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   protected Response tryWithExceptionHandling(CheckedSupplier<Response> action) {
     try {
+      CorelationId.set("" + System.currentTimeMillis());
       return action.apply();
     } catch (Exception e) {
       LOGGER.error(e.getMessage(), e);

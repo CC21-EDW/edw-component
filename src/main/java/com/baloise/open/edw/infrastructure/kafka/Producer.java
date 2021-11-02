@@ -5,10 +5,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
@@ -16,8 +13,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class Producer extends Config {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger("APPL." + MethodHandles.lookup().lookupClass());
 
   public Producer(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
     super(configProps, topic, clientId);

@@ -1,5 +1,6 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
+import com.baloise.open.edw.domain.services.CorelationId;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -20,7 +21,7 @@ public abstract class Config {
    */
   public static String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger("APPL." + MethodHandles.lookup().lookupClass());
+  protected static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   @Getter(AccessLevel.PACKAGE)
   private final Properties configProps = new Properties();
@@ -32,11 +33,11 @@ public abstract class Config {
   private final String clientId;
 
   Config(Properties configProps, String topic, String clientId){
+    CorelationId.set(clientId + "-" + System.currentTimeMillis());
     this.topic = topic;
     this.clientId = clientId;
     initDefaultProps(this.configProps);
     this.configProps.putAll(configProps);
-    this.configProps.forEach((key, value) -> LOGGER.debug("{}:{}", key, value));
   }
 
   private void initDefaultProps(Properties configProps) {
