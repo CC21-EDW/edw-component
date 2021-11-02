@@ -14,6 +14,12 @@ import java.util.Properties;
 
 public abstract class Config {
 
+  /**
+   * In Kafka client the parameter is wrong
+   * @{@link AdminClientConfig#BOOTSTRAP_SERVERS_CONFIG} is set to "bootstrap.servers" which does not work
+   */
+  public static String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
+
   private static final Logger LOGGER = LoggerFactory.getLogger("APPL." + MethodHandles.lookup().lookupClass());
 
   @Getter(AccessLevel.PACKAGE)
@@ -34,7 +40,8 @@ public abstract class Config {
   }
 
   private void initDefaultProps(Properties configProps) {
-    configProps.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "172.20.5.110:9092"); // comma separated
+    configProps.put(KAFKA_SERVER_CONFIG_KEY, "localhost:9092"); // comma separated
+    configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // comma separated
     configProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     configProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
     configProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
