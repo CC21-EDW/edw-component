@@ -1,6 +1,7 @@
 package com.baloise.open.edw.edwcomponent.kafka;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ProducerTest {
 
   @Test
+  @Disabled("until Testcontainer is setup (#3)")
   void verifyInit() throws ExecutionException, InterruptedException {
     Producer testee = new Producer(new Properties(), "testTopic");
 
