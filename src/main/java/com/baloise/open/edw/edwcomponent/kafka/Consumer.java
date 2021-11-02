@@ -1,12 +1,7 @@
 package com.baloise.open.edw.edwcomponent.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.utils.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +9,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Consumer extends Config implements Runnable {
@@ -24,8 +18,8 @@ public abstract class Consumer extends Config implements Runnable {
   private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
 
-  public Consumer(Properties configProps, String topic) {
-    super(configProps, topic);
+  public Consumer(Properties configProps, String topic, String clientId) {
+    super(configProps, topic, clientId);
     this.consumer = new KafkaConsumer<>(getConfigProps());
   }
 

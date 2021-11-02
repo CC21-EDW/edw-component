@@ -18,9 +18,8 @@ public class Producer extends Config {
 
   private static final Logger logger = LoggerFactory.getLogger(Producer.class);
 
-
-  public Producer(Properties configProps, String topic) throws ExecutionException, InterruptedException {
-    super(configProps, topic);
+  public Producer(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
+    super(configProps, topic, clientId);
     initTopic(Admin.create(getConfigProps()));
   }
 

@@ -9,13 +9,11 @@ Base component used for service connectors providing base functionality
 ## Tech-Stack
 see https://github.com/CC21-EDW/documentation/blob/main/adr/003-technology-stack.md
 
-## Using Docker
-- Build image ``docker build . -t edw-component``
-- Build run image ``docker run -p 8080:8080 edw-component ``
+### Kafka
+- [Kafka Java Client](https://docs.confluent.io/clients-kafka-java/current/overview.html)
+- [API JavaDoc](https://docs.confluent.io/platform/current/clients/javadocs/javadoc/index.html)
 
-## Actuator
-- http://localhost:8080/actuator/health
-- http://localhost:8080/actuator/health
+TODO: Add example how to use (Producer / Consumer)
 
 ## Releasing
 
