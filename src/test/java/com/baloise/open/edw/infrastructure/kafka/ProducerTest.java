@@ -1,6 +1,5 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
-import com.baloise.open.edw.infrastructure.kafka.Producer;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.junit.jupiter.api.Disabled;
@@ -16,7 +15,7 @@ class ProducerTest {
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     final Producer producer = new Producer(new Properties(), "CC21_EDW_2128", "stravaConnect");
-    producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World 2 ").get();
+    producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World 3 ").get();
   }
 
   @Test

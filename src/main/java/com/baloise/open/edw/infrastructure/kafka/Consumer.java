@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Consumer extends Config implements Runnable {
 
-  private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger("APPL." + MethodHandles.lookup().lookupClass());
   private final KafkaConsumer<String, String> kafkaConsumer;
   private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
@@ -34,7 +35,7 @@ public abstract class Consumer extends Config implements Runnable {
         kafkaConsumer.poll(Duration.of(1000, ChronoUnit.MILLIS)).forEach(this::process);
       }
     } finally {
-      logger.info("Consumer shutdown ");
+      LOGGER.info("Consumer shutdown ");
       kafkaConsumer.close();
     }
   }
