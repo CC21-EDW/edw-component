@@ -1,4 +1,4 @@
-package com.baloise.open.edw.edwcomponent.kafka;
+package com.baloise.open.edw.infrastructure.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

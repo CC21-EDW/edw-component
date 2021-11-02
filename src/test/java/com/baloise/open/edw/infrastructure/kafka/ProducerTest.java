@@ -1,5 +1,6 @@
-package com.baloise.open.edw.edwcomponent.kafka;
+package com.baloise.open.edw.infrastructure.kafka;
 
+import com.baloise.open.edw.infrastructure.kafka.Producer;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.junit.jupiter.api.Disabled;

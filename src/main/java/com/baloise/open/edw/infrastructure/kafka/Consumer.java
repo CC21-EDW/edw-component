@@ -1,4 +1,4 @@
-package com.baloise.open.edw.edwcomponent.kafka;
+package com.baloise.open.edw.infrastructure.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -25,6 +25,7 @@ public abstract class Consumer extends Config implements Runnable {
 
   public abstract void process(ConsumerRecord<String, String> record);
 
+  @Override
   //TODO: parameterize poll interval
   public void run() {
     try {
