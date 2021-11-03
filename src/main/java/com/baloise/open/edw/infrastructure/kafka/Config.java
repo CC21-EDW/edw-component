@@ -21,6 +21,8 @@ public abstract class Config {
    */
   public static String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
 
+  public static String STAUTS_TOPIC_NAME = "dz.edw.workflow.status";
+
   protected static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   @Getter(AccessLevel.PACKAGE)

@@ -14,8 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ProducerTest {
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
-    final Producer producer = new Producer(new Properties(), "CC21_EDW_2128", "stravaConnect");
-    producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World 3 ").get();
+    final String topic = "CC21_EDW_1140";
+    final Producer producer = new Producer(new Properties(), topic, "stravaConnect");
+    producer.pushEvent(topic, "MyKey", "Hello World 3 ").get();
   }
 
   @Test
