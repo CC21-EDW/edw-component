@@ -1,6 +1,7 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
 import com.baloise.open.edw.domain.kafka.Status;
+import com.baloise.open.edw.domain.services.CorrelationId;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -28,11 +29,11 @@ public class Producer extends Config {
   private void registerProducer(boolean isNewTopic) {
     if (isNewTopic) {
       Status status = new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED);
-      pushEvent(STAUTS_TOPIC_NAME, Status.EventType.TOPIC_CREATED.name(), status.toJson());
+      pushEvent(STAUTS_TOPIC_NAME, CorrelationId.get(), status.toJson());
     }
 
     Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
-    pushEvent(STAUTS_TOPIC_NAME, Status.EventType.CONNECT.name(), status.toJson());
+    pushEvent(STAUTS_TOPIC_NAME, CorrelationId.get(), status.toJson());
   }
 
   private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
