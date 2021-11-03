@@ -1,5 +1,7 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
+import com.baloise.open.edw.domain.kafka.Status;
+import com.baloise.open.edw.domain.services.CorrelationId;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -20,22 +22,38 @@ public class Producer extends Config {
   }
 
   private void initTopic(final Admin admin) throws ExecutionException, InterruptedException {
-    final Set<String> names = admin.listTopics().names().getNow(Collections.singleton(getTopic()));
-    final boolean isTopicInexistent = names.stream().noneMatch(name -> name.equals(getTopic()));
+    isCreateMissingTopic(admin, STAUTS_TOPIC_NAME);
+    registerProducer(isCreateMissingTopic(admin, getTopic()));
+  }
 
-    if (!isTopicInexistent) {
-      LOGGER.debug("Topic '{}' exists, skip creation.", getTopic());
-      return;
+  private void registerProducer(boolean isNewTopic) {
+    if (isNewTopic) {
+      Status status = new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED);
+      pushEvent(STAUTS_TOPIC_NAME, CorrelationId.get(), status.toJson());
     }
 
-    final NewTopic newTopic = new NewTopic(getTopic(), 1, (short) 1);
-    admin.createTopics(Collections.singleton(newTopic)).values().get(getTopic()).get();
-    LOGGER.info("Created topic '{}'", getTopic());
+    Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
+    pushEvent(STAUTS_TOPIC_NAME, CorrelationId.get(), status.toJson());
+  }
+
+  private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
+    final Set<String> names = admin.listTopics().names().get();
+    final boolean isTopicInexistent = names.stream().noneMatch(name -> name.equals(topicName));
+
+    if (!isTopicInexistent) {
+      LOGGER.debug("Topic '{}' exists, skip creation.", topicName);
+      return false;
+    }
+
+    final NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
+    admin.createTopics(Collections.singleton(newTopic)).values().get(topicName).get();
+    LOGGER.info("Created topic '{}'", topicName);
+    return true;
   }
 
   public Future<RecordMetadata> pushEvent(String topic, String key, String value) {
     final ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
-    try (final KafkaProducer<String, String>producer = new KafkaProducer<>(getConfigProps())) {
+    try (final KafkaProducer<String, String> producer = new KafkaProducer<>(getConfigProps())) {
       return producer.send(producerRecord);
     }
   }
