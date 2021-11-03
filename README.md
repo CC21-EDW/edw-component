@@ -5,6 +5,31 @@
 
 # edw-component
 Base component used for service connectors providing base functionality
+- Add dependency to library
+```XML
+<dependency>
+    <groupId>com.baloise.open.edw-component</groupId>
+    <artifactId>edw-component</artifactId>
+    <version>0.0.2</version>
+</dependency>
+```
+- Add Github package registry as repository
+```XML
+ <repository>
+  <id>github</id>
+  <name>GitHub CC21-EDW Apache Maven Packages</name>
+  <url>https://maven.pkg.github.com/CC21-EDW/</url>
+  <releases><enabled>true</enabled></releases>
+</repository>
+```
+- Verify to have a valid github token in maven settings in order to access resources
+```XML
+<server>
+  <id>github</id>
+  <username>githubUSer</username>
+  <password>ghp_xxxxxxxxxxxxxxxxxxxxxxx</password>
+</server>
+`````
 
 ## Tech-Stack
 see https://github.com/CC21-EDW/documentation/blob/main/adr/003-technology-stack.md
@@ -46,6 +71,6 @@ In order to support the logging of correlation IDs, the slf4j log pattern needs 
 
 ## Releasing
 
-Run e.g. on main: `mvn -B release:prepare`
+Run e.g. on main: `mvnw -B release:prepare`
 
 Subsequently the GitHub action worksflow "create release" will pick up the published tag and release and deploy the artifacts in the Github package registry.
