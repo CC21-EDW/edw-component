@@ -19,86 +19,85 @@ import java.util.concurrent.Future;
 @Slf4j
 public class ProducerImpl extends Config implements Producer {
 
-    ProducerImpl(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
-        super(configProps, topic, clientId);
-        initTopic(Admin.create(getConfigProps()));
+  ProducerImpl(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
+    super(configProps, topic, clientId);
+    initTopic(Admin.create(getConfigProps()));
+  }
+
+  private void initTopic(final Admin admin) throws ExecutionException, InterruptedException {
+    isCreateMissingTopic(admin, STATUS_TOPIC_NAME);
+    registerProducer(isCreateMissingTopic(admin, getTopic()));
+  }
+
+  private void registerProducer(boolean isNewTopic) {
+    if (isNewTopic) {
+      pushStatusTopicCreated();
+    }
+    pushStatusProducerConnected();
+  }
+
+  private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
+    final Set<String> names = admin.listTopics().names().get();
+    final boolean isTopicInexistent = names.stream().noneMatch(name -> name.equals(topicName));
+
+    if (!isTopicInexistent) {
+      log.debug("Topic '{}' exists, skip creation.", topicName);
+      return false;
     }
 
-    private void initTopic(final Admin admin) throws ExecutionException, InterruptedException {
-        isCreateMissingTopic(admin, STATUS_TOPIC_NAME);
-        registerProducer(isCreateMissingTopic(admin, getTopic()));
+    final NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
+    admin.createTopics(Collections.singleton(newTopic)).values().get(topicName).get();
+    log.info("Created topic '{}'", topicName);
+    return true;
+  }
+
+  @Override
+  public Future<RecordMetadata> pushEvent(String correlationId, Object value) {
+    if (correlationId == null || correlationId.isBlank()) {
+      throw new IllegalArgumentException("Correlation ID required.");
     }
+    return pushEvent(getTopic(), correlationId, value);
+  }
 
-    private void registerProducer(boolean isNewTopic) {
-        if (isNewTopic) {
-            pushStatusTopicCreated();
-        }
-        pushStatusProducerConnected();
+  @Override
+  public Future<RecordMetadata> pushEvent(Object value) {
+    return pushEvent(getTopic(), generateDefaultCorrelationId(), value);
+  }
+
+  private Future<RecordMetadata> pushEvent(String inTopicName, String correlationId, Object value) {
+    CorrelationId.set(correlationId);
+
+    final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(inTopicName, correlationId, value);
+    try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
+      return producer.send(producerRecord);
     }
+  }
 
-    private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
-        final Set<String> names = admin.listTopics().names().get();
-        final boolean isTopicInexistent = names.stream().noneMatch(name -> name.equals(topicName));
+  /**
+   * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer connects
+   */
+  private void pushStatusProducerConnected() {
+    final Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
+    pushStatusEvent(status);
+    log.info("Connected producer with ID '{}' to workflow.", getClientId());
+  }
 
-        if (!isTopicInexistent) {
-            log.debug("Topic '{}' exists, skip creation.", topicName);
-            return false;
-        }
+  @Override
+  public void pushStatusProducerShutdown() {
+    final Status status = new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN);
+    pushStatusEvent(status);
+    log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
+  }
 
-        final NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
-        admin.createTopics(Collections.singleton(newTopic)).values().get(topicName).get();
-        log.info("Created topic '{}'", topicName);
-        return true;
-    }
+  @Override
+  public void pushStatusTopicCreated() {
+    final Status status = new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED);
+    pushStatusEvent(status);
+    log.info("Created topic with name '{}' by producer with ID '{}' from workflow.", getTopic(), getClientId());
+  }
 
-    @Override
-    public Future<RecordMetadata> pushEvent(String correlationId, Object value) {
-        if (correlationId == null || correlationId.isBlank()) {
-            throw new IllegalArgumentException("Correlation ID required.");
-        }
-        return pushEvent(getTopic(), correlationId, value);
-    }
-
-    @Override
-    public Future<RecordMetadata> pushEvent(Object value) {
-        return pushEvent(getTopic(), generateDefaultCorrelationId(), value);
-    }
-
-    private Future<RecordMetadata> pushEvent(String inTopicName, String correlationId, Object value) {
-        CorrelationId.set(correlationId);
-
-        final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(inTopicName, correlationId, value);
-        try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
-            return producer.send(producerRecord);
-        }
-    }
-
-    private String generateDefaultCorrelationId() {
-        return getClientId() + "-" + UUID.randomUUID();
-    }
-
-    /**
-     * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer connects
-     */
-    private void pushStatusProducerConnected() {
-        pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.CONNECT));
-        log.info("Connected producer with ID '{}' to workflow.", getClientId());
-    }
-
-    @Override
-    public void pushStatusProducerShutdown() {
-        pushStatusEvent(new Status(getClientId(), STATUS_TOPIC_NAME, Status.EventType.SHUTDOWN));
-        log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
-    }
-
-    @Override
-    public void pushStatusTopicCreated() {
-        pushStatusEvent(new Status(getClientId(), STATUS_TOPIC_NAME, Status.EventType.TOPIC_CREATED));
-        log.info("Produced topic with name '{}' by producer with ID '{}' from workflow.", getClientId());
-    }
-
-    private void pushStatusEvent(Status status) {
-        pushEvent(STATUS_TOPIC_NAME, generateDefaultCorrelationId(), status.toJson());
-    }
+  private void pushStatusEvent(Status status) {
+    pushEvent(STATUS_TOPIC_NAME, generateDefaultCorrelationId(), status.toJson());
+  }
 
 }

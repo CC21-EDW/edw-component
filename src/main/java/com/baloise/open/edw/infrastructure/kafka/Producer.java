@@ -1,6 +1,5 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
-import com.baloise.open.edw.domain.services.CorrelationId;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.Properties;

@@ -1,5 +1,7 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
+import java.util.UUID;
+
 public interface Workflow {
 
   /**
@@ -12,4 +14,10 @@ public interface Workflow {
    * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer creates new Topic
    */
   void pushStatusTopicCreated();
+
+  String getClientId();
+
+  default String generateDefaultCorrelationId() {
+    return getClientId() + "-" + UUID.randomUUID();
+  }
 }
