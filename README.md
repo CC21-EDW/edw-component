@@ -10,7 +10,7 @@ Base component used for service connectors providing base functionality
 <dependency>
     <groupId>com.baloise.open.edw-component</groupId>
     <artifactId>edw-component</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 - Add Github package registry as repository
