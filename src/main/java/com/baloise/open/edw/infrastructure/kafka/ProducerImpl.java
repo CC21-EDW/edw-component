@@ -12,12 +12,11 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Slf4j
-public class ProducerImpl extends Config implements Producer {
+public class ProducerImpl extends AbstractWorkflow implements Producer {
 
   ProducerImpl(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
     super(configProps, topic, clientId);
@@ -73,30 +72,7 @@ public class ProducerImpl extends Config implements Producer {
     }
   }
 
-  /**
-   * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer connects
-   */
-  private void pushStatusProducerConnected() {
-    final Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
-    pushStatusEvent(status);
-    log.info("Connected producer with ID '{}' to workflow.", getClientId());
-  }
-
-  @Override
-  public void pushStatusProducerShutdown() {
-    final Status status = new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN);
-    pushStatusEvent(status);
-    log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
-  }
-
-  @Override
-  public void pushStatusTopicCreated() {
-    final Status status = new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED);
-    pushStatusEvent(status);
-    log.info("Created topic with name '{}' by producer with ID '{}' from workflow.", getTopic(), getClientId());
-  }
-
-  private void pushStatusEvent(Status status) {
+  void pushStatusEvent(Status status) {
     pushEvent(STATUS_TOPIC_NAME, generateDefaultCorrelationId(), status.toJson());
   }
 

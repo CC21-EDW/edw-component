@@ -17,7 +17,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
-public class ConsumerImpl extends Config implements Consumer {
+public class ConsumerImpl extends AbstractWorkflow implements Consumer {
 
   private final KafkaConsumer<String, String> kafkaConsumer;
   private final AtomicBoolean isShutdown = new AtomicBoolean(false);
@@ -46,6 +46,7 @@ public class ConsumerImpl extends Config implements Consumer {
     log.info("run consumer");
     try {
       kafkaConsumer.subscribe(Collections.singleton(getTopic()));
+      pushStatusProducerConnected();
       while (!isShutdown.get()) {
         kafkaConsumer.poll(Duration.of(pollTime, ChronoUnit.MILLIS)).forEach(recordConsumer);
       }
@@ -55,30 +56,7 @@ public class ConsumerImpl extends Config implements Consumer {
     }
   }
 
-  /**
-   * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer connects
-   */
-  private void pushStatusProducerConnected() {
-    final Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
-    pushStatusEvent(status);
-    log.info("Connected producer with ID '{}' to workflow.", getClientId());
-  }
-
-  @Override
-  public void pushStatusProducerShutdown() {
-    final Status status = new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN);
-    pushStatusEvent(status);
-    log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
-  }
-
-  @Override
-  public void pushStatusTopicCreated() {
-    final Status status = new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED);
-    pushStatusEvent(status);
-    log.info("Created topic with name '{}' by producer with ID '{}' from workflow.", getTopic(), getClientId());
-  }
-
-  private void pushStatusEvent(Status status) {
+  void pushStatusEvent(Status status) {
     final String correlationId = generateDefaultCorrelationId();
     CorrelationId.set(correlationId);
 
