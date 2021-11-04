@@ -17,11 +17,11 @@ public abstract class Config {
 
   /**
    * In Kafka client the parameter is wrong
-   * @{@link AdminClientConfig#BOOTSTRAP_SERVERS_CONFIG} is set to "bootstrap.servers" which does not work
+   * {@link AdminClientConfig#BOOTSTRAP_SERVERS_CONFIG} is set to "bootstrap.servers" which does not work
    */
   public static final String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
 
-  public static final String SCHEMA_SERVER_CONFIG_KEY="schema.registry.url";
+  public static final String SCHEMA_SERVER_CONFIG_KEY = "schema.registry.url";
 
   public static final String STATUS_TOPIC_NAME = "dz.edw.workflow.status";
 
@@ -34,7 +34,7 @@ public abstract class Config {
   @Getter
   private final String clientId;
 
-  Config(Properties configProps, String topic, String clientId){
+  Config(Properties configProps, String topic, String clientId) {
     CorrelationId.set(clientId + "-" + System.currentTimeMillis());
     this.topic = topic;
     this.clientId = clientId;

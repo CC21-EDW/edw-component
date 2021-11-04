@@ -28,17 +28,10 @@ class ProducerTest {
   @Container
   public static KafkaContainer kafkaTestContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.3.2"));
 
-  @Test
-  void testEnvironmentReady() {
-    final String bootstrapServers = kafkaTestContainer.getBootstrapServers();
-    assertNotNull(bootstrapServers);
-    assertTrue(bootstrapServers.contains("localhost"));
-  }
-
-  @Test
+   @Test
   void verifyInit() throws ExecutionException, InterruptedException {
 
-    Producer testee = new Producer(getTestcontainerProperties(), "testTopic", "myId");
+    ProducerImpl testee = new ProducerImpl(getTestcontainerProperties(), "testTopic", "myId");
 
     final Properties configProps = testee.getConfigProps();
     assertEquals(9, configProps.size());
@@ -49,11 +42,10 @@ class ProducerTest {
     assertTrue(configProps.containsKey(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG));
     assertTrue(configProps.containsKey(ConsumerConfig.GROUP_ID_CONFIG));
     assertTrue(configProps.containsValue("myId"));
-
   }
 
   private Properties getTestcontainerProperties() {
-    Properties props = new Properties();
+    final Properties props = new Properties();
     props.put(Config.KAFKA_SERVER_CONFIG_KEY, kafkaTestContainer.getBootstrapServers());
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestContainer.getBootstrapServers());
     return props;
