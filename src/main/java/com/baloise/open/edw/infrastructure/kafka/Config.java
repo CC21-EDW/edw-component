@@ -45,11 +45,12 @@ public abstract class Config {
   private void initDefaultProps(Properties configProps) {
     configProps.put(KAFKA_SERVER_CONFIG_KEY, "localhost:9092"); // comma separated
     configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // comma separated
+    configProps.put(Config.SCHEMA_SERVER_CONFIG_KEY, "http://localhost:9012");
     configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     configProps.put(ConsumerConfig.GROUP_ID_CONFIG, getClientId());
     configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroSerializer");
     configProps.put("acks", "all");
 
     try {

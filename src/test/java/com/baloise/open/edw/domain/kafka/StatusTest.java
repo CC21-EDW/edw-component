@@ -13,6 +13,5 @@ class StatusTest {
     assertEquals("myClientId", testee.getClientId());
     assertEquals("myTopicName", testee.getTopic());
     assertEquals(Status.EventType.SHUTDOWN, testee.getEventType());
-    assertEquals("{ \"clientId\" : \"myClientId\", \"topic\" : \"myTopicName\", \"eventType\" : \"SHUTDOWN\" }", testee.toJson());
   }
 }
