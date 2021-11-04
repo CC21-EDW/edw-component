@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,6 +20,8 @@ public abstract class Config {
    * @{@link AdminClientConfig#BOOTSTRAP_SERVERS_CONFIG} is set to "bootstrap.servers" which does not work
    */
   public static final String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
+
+  public static final String SCHEMA_SERVER_CONFIG_KEY="schema.registry.url";
 
   public static final String STATUS_TOPIC_NAME = "dz.edw.workflow.status";
 
@@ -42,11 +45,11 @@ public abstract class Config {
   private void initDefaultProps(Properties configProps) {
     configProps.put(KAFKA_SERVER_CONFIG_KEY, "localhost:9092"); // comma separated
     configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // comma separated
-    configProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-    configProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    configProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-    configProps.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     configProps.put(ConsumerConfig.GROUP_ID_CONFIG, getClientId());
+    configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
     configProps.put("acks", "all");
 
     try {
