@@ -16,65 +16,70 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Slf4j
-public class ProducerImpl extends Config implements Producer{
+public class ProducerImpl extends Config implements Producer {
 
-  ProducerImpl(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
-    super(configProps, topic, clientId);
-    initTopic(Admin.create(getConfigProps()));
-  }
-
-  private void initTopic(final Admin admin) throws ExecutionException, InterruptedException {
-    isCreateMissingTopic(admin, STATUS_TOPIC_NAME);
-    registerProducer(isCreateMissingTopic(admin, getTopic()));
-  }
-
-  private void registerProducer(boolean isNewTopic) {
-    if (isNewTopic) {
-      pushStatusTopicCreated();
-    }
-    pushStatusProducerConnected();
-  }
-
-  private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
-    final Set<String> names = admin.listTopics().names().get();
-    final boolean isTopicInexistent = names.stream().noneMatch(name -> name.equals(topicName));
-
-    if (!isTopicInexistent) {
-      log.debug("Topic '{}' exists, skip creation.", topicName);
-      return false;
+    ProducerImpl(Properties configProps, String topic, String clientId) throws ExecutionException, InterruptedException {
+        super(configProps, topic, clientId);
+        initTopic(Admin.create(getConfigProps()));
     }
 
-    final NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
-    admin.createTopics(Collections.singleton(newTopic)).values().get(topicName).get();
-    log.info("Created topic '{}'", topicName);
-    return true;
-  }
-
-  @Override
-  public Future<RecordMetadata> pushEvent(String topic, String key, Object value) {
-    final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic, key, value);
-    try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
-      return producer.send(producerRecord);
+    private void initTopic(final Admin admin) throws ExecutionException, InterruptedException {
+        isCreateMissingTopic(admin, STATUS_TOPIC_NAME);
+        registerProducer(isCreateMissingTopic(admin, getTopic()));
     }
-  }
 
-  @Override
-  public void pushStatusProducerConnected() {
-    pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.CONNECT));
-  }
+    private void registerProducer(boolean isNewTopic) {
+        if (isNewTopic) {
+            pushStatusTopicCreated();
+        }
+        pushStatusProducerConnected();
+    }
 
-  @Override
-  public void pushStatusProducerShutdown() {
-    pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN));
-  }
+    private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
+        final Set<String> names = admin.listTopics().names().get();
+        final boolean isTopicInexistent = names.stream().noneMatch(name -> name.equals(topicName));
 
-  @Override
-  public void pushStatusTopicCreated() {
-    pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED));
-  }
+        if (!isTopicInexistent) {
+            log.debug("Topic '{}' exists, skip creation.", topicName);
+            return false;
+        }
 
-  private void pushStatusEvent(Status status) {
-    pushEvent(STATUS_TOPIC_NAME, CorrelationId.get(), status.toJson());
-  }
+        final NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
+        admin.createTopics(Collections.singleton(newTopic)).values().get(topicName).get();
+        log.info("Created topic '{}'", topicName);
+        return true;
+    }
+
+    @Override
+    public Future<RecordMetadata> pushEvent(String topic, String key, Object value) {
+        final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic, key, value);
+        try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
+            return producer.send(producerRecord);
+        }
+    }
+
+    /**
+     * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer connects
+     */
+    private void pushStatusProducerConnected() {
+        pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.CONNECT));
+        log.info("Connected producer with ID '{}' to workflow.", getClientId());
+    }
+
+    @Override
+    public void pushStatusProducerShutdown() {
+        pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN));
+        log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
+    }
+
+    @Override
+    public void pushStatusTopicCreated() {
+        pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED));
+        log.info("Produced topic with name '{}' by producer with ID '{}' from workflow.", getClientId());
+    }
+
+    private void pushStatusEvent(Status status) {
+        pushEvent(STATUS_TOPIC_NAME, CorrelationId.get(), status.toJson());
+    }
 
 }
