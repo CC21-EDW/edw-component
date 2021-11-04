@@ -8,9 +8,9 @@ Base component used for service connectors providing base functionality
 - Add dependency to library
 ```XML
 <dependency>
-    <groupId>com.baloise.open.edw-component</groupId>
+    <groupId>com.baloise.open.edw</groupId>
     <artifactId>edw-component</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 </dependency>
 ```
 - Add Github package registry as repository
@@ -67,7 +67,7 @@ producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World").get();
 With respect to unit testing and CI build, [Testcontainer](https://www.testcontainers.org/test_framework_integration/junit_5/)
 concept is used to run tests against kafka docker image (see https://www.testcontainers.org/modules/kafka/)
 
-### Logging
+## Logging
 In order to support the logging of correlation IDs, the slf4j log pattern needs to contain ```[%X{CORRELATION-ID}]```
 ```
 <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - [%X{CORRELATION-ID}] %msg%n"/>

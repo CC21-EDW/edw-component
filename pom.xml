@@ -22,7 +22,7 @@
     <url>https://www.baloise.com</url>
   </organization>
 
-  <groupId>com.baloise.open.edw-component</groupId>
+  <groupId>com.baloise.open.edw</groupId>
   <artifactId>edw-component</artifactId>
   <version>0.0.4-SNAPSHOT</version>
   <packaging>jar</packaging>
