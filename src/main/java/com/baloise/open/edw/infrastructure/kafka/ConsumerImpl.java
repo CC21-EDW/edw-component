@@ -1,6 +1,5 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
-import com.baloise.open.edw.domain.kafka.Status;
 import lombok.Builder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

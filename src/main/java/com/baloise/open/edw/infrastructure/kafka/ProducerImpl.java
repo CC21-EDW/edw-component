@@ -12,6 +12,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -51,11 +52,29 @@ public class ProducerImpl extends Config implements Producer {
     }
 
     @Override
-    public Future<RecordMetadata> pushEvent(String topic, String key, Object value) {
-        final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic, key, value);
+    public Future<RecordMetadata> pushEvent(String correlationId, Object value) {
+        if (correlationId == null || correlationId.isBlank()) {
+            throw new IllegalArgumentException("Correlation ID required.");
+        }
+        return pushEvent(getTopic(), correlationId, value);
+    }
+
+    @Override
+    public Future<RecordMetadata> pushEvent(Object value) {
+        return pushEvent(getTopic(), generateDefaultCorrelationId(), value);
+    }
+
+    private Future<RecordMetadata> pushEvent(String inTopicName, String correlationId, Object value) {
+        CorrelationId.set(correlationId);
+
+        final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(inTopicName, correlationId, value);
         try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
             return producer.send(producerRecord);
         }
+    }
+
+    private String generateDefaultCorrelationId() {
+        return getClientId() + "-" + UUID.randomUUID();
     }
 
     /**
@@ -68,18 +87,18 @@ public class ProducerImpl extends Config implements Producer {
 
     @Override
     public void pushStatusProducerShutdown() {
-        pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN));
+        pushStatusEvent(new Status(getClientId(), STATUS_TOPIC_NAME, Status.EventType.SHUTDOWN));
         log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
     }
 
     @Override
     public void pushStatusTopicCreated() {
-        pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED));
+        pushStatusEvent(new Status(getClientId(), STATUS_TOPIC_NAME, Status.EventType.TOPIC_CREATED));
         log.info("Produced topic with name '{}' by producer with ID '{}' from workflow.", getClientId());
     }
 
     private void pushStatusEvent(Status status) {
-        pushEvent(STATUS_TOPIC_NAME, CorrelationId.get(), status.toJson());
+        pushEvent(STATUS_TOPIC_NAME, generateDefaultCorrelationId(), status.toJson());
     }
 
 }
