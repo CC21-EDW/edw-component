@@ -1,9 +1,11 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.Properties;
 
+@Slf4j
 class ConsumerTest extends Consumer {
 
   public ConsumerTest(Properties configProps, String topic, String clientId) {
@@ -16,6 +18,6 @@ class ConsumerTest extends Consumer {
 
   @Override
   public void process(ConsumerRecord<String, String> record) {
-    System.out.printf("consumed message %s:%s", record.key(), record.value());
+    log.info(String.format("consumed message %s:%s", record.key(), record.value()));
   }
 }

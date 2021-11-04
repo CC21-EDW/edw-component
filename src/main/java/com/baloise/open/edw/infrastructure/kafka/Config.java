@@ -3,27 +3,24 @@ package com.baloise.open.edw.infrastructure.kafka;
 import com.baloise.open.edw.domain.services.CorrelationId;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
+@Slf4j
 public abstract class Config {
 
   /**
    * In Kafka client the parameter is wrong
    * @{@link AdminClientConfig#BOOTSTRAP_SERVERS_CONFIG} is set to "bootstrap.servers" which does not work
    */
-  public static String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
+  public static final String KAFKA_SERVER_CONFIG_KEY = "kafka.bootstrap.servers";
 
-  public static String STAUTS_TOPIC_NAME = "dz.edw.workflow.status";
-
-  protected static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  public static final String STATUS_TOPIC_NAME = "dz.edw.workflow.status";
 
   @Getter(AccessLevel.PACKAGE)
   private final Properties configProps = new Properties();
@@ -56,7 +53,7 @@ public abstract class Config {
       // TODO: set host address instead of localhost
       configProps.put(AdminClientConfig.CLIENT_ID_CONFIG, InetAddress.getLocalHost().getHostName());
     } catch (UnknownHostException e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
     }
   }
 

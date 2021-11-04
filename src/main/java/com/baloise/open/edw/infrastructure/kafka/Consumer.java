@@ -1,5 +1,6 @@
 package com.baloise.open.edw.infrastructure.kafka;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 public abstract class Consumer extends Config implements Runnable {
 
   private final KafkaConsumer<String, String> kafkaConsumer;
@@ -24,14 +26,14 @@ public abstract class Consumer extends Config implements Runnable {
   @Override
   //TODO: parameterize poll interval
   public void run() {
-    LOGGER.info("run consumer");
+    log.info("run consumer");
     try {
       kafkaConsumer.subscribe(Collections.singleton(getTopic()));
       while (!isShutdown.get()) {
         kafkaConsumer.poll(Duration.of(1000, ChronoUnit.MILLIS)).forEach(this::process);
       }
     } finally {
-      LOGGER.info("Consumer shutdown ");
+      log.info("Consumer shutdown ");
       kafkaConsumer.close();
     }
   }

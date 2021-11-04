@@ -63,6 +63,10 @@ final Producer producer = new Producer(new Properties(), "CC21_EDW_2128", "strav
 producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World").get();
 ```
 
+#### Unit-Testing
+With respect to unit testing and CI build, [Testcontainer](https://www.testcontainers.org/test_framework_integration/junit_5/)
+concept is used to run tests against kafka docker image (see https://www.testcontainers.org/modules/kafka/)
+
 ### Logging
 In order to support the logging of correlation IDs, the slf4j log pattern needs to contain ```[%X{CORRELATION-ID}]```
 ```
