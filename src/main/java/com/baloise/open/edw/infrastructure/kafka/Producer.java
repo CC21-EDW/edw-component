@@ -53,9 +53,9 @@ public class Producer extends Config {
     return true;
   }
 
-  public Future<RecordMetadata> pushEvent(String topic, String key, String value) {
-    final ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
-    try (final KafkaProducer<String, String> producer = new KafkaProducer<>(getConfigProps())) {
+  public Future<RecordMetadata> pushEvent(String topic, String key, Object value) {
+    final ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic, key, value);
+    try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
       return producer.send(producerRecord);
     }
   }
