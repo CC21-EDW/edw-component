@@ -30,12 +30,9 @@ public class ProducerImpl extends Config implements Producer{
 
   private void registerProducer(boolean isNewTopic) {
     if (isNewTopic) {
-      Status status = new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED);
-      pushEvent(STATUS_TOPIC_NAME, CorrelationId.get(), status.toJson());
+      pushStatusTopicCreated();
     }
-
-    Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
-    pushEvent(STATUS_TOPIC_NAME, CorrelationId.get(), status.toJson());
+    pushStatusProducerConnected();
   }
 
   private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
@@ -59,6 +56,25 @@ public class ProducerImpl extends Config implements Producer{
     try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
       return producer.send(producerRecord);
     }
+  }
+
+  @Override
+  public void pushStatusProducerConnected() {
+    pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.CONNECT));
+  }
+
+  @Override
+  public void pushStatusProducerShutdown() {
+    pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN));
+  }
+
+  @Override
+  public void pushStatusTopicCreated() {
+    pushStatusEvent(new Status(getClientId(), getTopic(), Status.EventType.TOPIC_CREATED));
+  }
+
+  private void pushStatusEvent(Status status) {
+    pushEvent(STATUS_TOPIC_NAME, CorrelationId.get(), status.toJson());
   }
 
 }
