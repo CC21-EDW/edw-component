@@ -16,13 +16,4 @@ public class Status implements Serializable {
   private final String clientId;
   private final String topic;
   private final EventType eventType;
-
-
-  public String toJson() {
-    return String.format("{ " +
-        "\"clientId\" : \"%s\", " +
-        "\"topic\" : \"%s\", " +
-        "\"eventType\" : \"%s\" " +
-        "}", clientId, topic, eventType);
-  }
 }

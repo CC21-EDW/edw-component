@@ -2,6 +2,7 @@ package com.baloise.open.edw.infrastructure.kafka;
 
 import com.baloise.open.edw.domain.kafka.Status;
 import com.baloise.open.edw.domain.services.CorrelationId;
+import com.baloise.open.edw.infrastructure.kafka.mapper.StatusDtoMapper;
 import lombok.Builder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,48 +21,48 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ConsumerImpl extends AbstractWorkflow implements Consumer {
 
   private final KafkaConsumer<String, Object> kafkaConsumer;
-  private final AtomicBoolean isShutdown = new AtomicBoolean(false);
+    private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
-  /**
-   * Function processing consumed records
-   */
-  @Setter
+    /**
+     * Function processing consumed records
+     */
+    @Setter
   private java.util.function.Consumer<? super ConsumerRecord<String, Object>> recordConsumer;
 
-  /**
-   * Topic poll interval in milliseconds
-   */
-  @Setter
-  private long pollTime = 1000;
+    /**
+     * Topic poll interval in milliseconds
+     */
+    @Setter
+    private long pollTime = 1000;
 
-  @Builder
+    @Builder
   protected ConsumerImpl(Properties configProps, String topic, String clientId, java.util.function.Consumer<? super ConsumerRecord<String, Object>> consumer) {
-    super(configProps, topic, clientId);
-    this.kafkaConsumer = new KafkaConsumer<>(getConfigProps());
-    this.recordConsumer = consumer;
-  }
-
-  @Override
-  public void run() {
-    log.info("run consumer");
-    try {
-      kafkaConsumer.subscribe(Collections.singleton(getTopic()));
-      pushStatusProducerConnected();
-      while (!isShutdown.get()) {
-        kafkaConsumer.poll(Duration.of(pollTime, ChronoUnit.MILLIS)).forEach(recordConsumer);
-      }
-    } finally {
-      log.info("Consumer shutdown ");
-      kafkaConsumer.close();
+        super(configProps, topic, clientId);
+        this.kafkaConsumer = new KafkaConsumer<>(getConfigProps());
+        this.recordConsumer = consumer;
     }
-  }
 
-  void pushStatusEvent(Status status) {
-    final String correlationId = generateDefaultCorrelationId();
-    CorrelationId.set(correlationId);
-
-    try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
-      producer.send(new ProducerRecord<>(STATUS_TOPIC_NAME, correlationId, status.toJson()));
+    @Override
+    public void run() {
+        log.info("run consumer");
+        try {
+            kafkaConsumer.subscribe(Collections.singleton(getTopic()));
+            pushStatusProducerConnected();
+            while (!isShutdown.get()) {
+                kafkaConsumer.poll(Duration.of(pollTime, ChronoUnit.MILLIS)).forEach(recordConsumer);
+            }
+        } finally {
+            log.info("Consumer shutdown ");
+            kafkaConsumer.close();
+        }
     }
-  }
+
+    void pushStatusEvent(Status status) {
+        final String correlationId = generateDefaultCorrelationId();
+        CorrelationId.set(correlationId);
+
+        try (final KafkaProducer<String, Object> producer = new KafkaProducer<>(getConfigProps())) {
+            producer.send(new ProducerRecord<>(STATUS_TOPIC_NAME, correlationId, StatusDtoMapper.INSTANCE.map(status)));
+        }
+    }
 }

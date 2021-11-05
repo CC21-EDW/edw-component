@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "StatusDto",
+  "namespace": "com.baloise.open.edw.infrastructure.kafka.model",
+  "doc": "Provides the data transfer object used to store and retrieve workflow status objects.",
+  "fields": [
+    {
+      "name": "clientId",
+      "doc": "Provides unique name for a client that has created the event.",
+      "type": "string"
+    },
+    {
+      "name": "topic",
+      "doc": "Provides unique name for a topic this event is referring to.",
+      "type": "string"
+    },
+    {
+      "name": "eventType",
+      "doc": "Provides the type such as created, shutdown, etc.",
+      "type": "string"
+    }
+  ]
+}

@@ -17,38 +17,39 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class ProducerTest {
 
-
+/*
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     final String topic = "lz.edw.strava-connect.activity";
     final Producer producer = Producer.create(new Properties(), topic, "SportsRepoTest");
     producer.pushEvent( "I was here!").get();
   }
+*/
 
+    @Container
+    public static KafkaContainer kafkaTestContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.3.2"));
 
-  @Container
-  public static KafkaContainer kafkaTestContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.3.2"));
+    @Test
+    void verifyInit() throws ExecutionException, InterruptedException {
 
-   @Test
-  void verifyInit() throws ExecutionException, InterruptedException {
+        ProducerImpl testee = new ProducerImpl(getTestcontainerProperties(), "testTopic", "myId");
 
-    ProducerImpl testee = new ProducerImpl(getTestcontainerProperties(), "testTopic", "myId");
+        final Properties configProps = testee.getConfigProps();
+        assertEquals(10, configProps.size());
+        assertTrue(configProps.containsKey(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG));
+        assertTrue(configProps.containsKey(Config.SCHEMA_SERVER_CONFIG_KEY));
+        assertTrue(configProps.containsKey(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG));
+        assertTrue(configProps.containsKey(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG));
+        assertTrue(configProps.containsKey(ConsumerConfig.GROUP_ID_CONFIG));
+        assertTrue(configProps.containsKey(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG));
+        assertTrue(configProps.containsKey(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG));
+        assertTrue(configProps.containsValue("myId"));
+    }
 
-    final Properties configProps = testee.getConfigProps();
-    assertEquals(9, configProps.size());
-    assertTrue(configProps.containsKey("key.serializer"));
-    assertTrue(configProps.containsKey("key.deserializer"));
-    assertTrue(configProps.containsKey("value.serializer"));
-    assertTrue(configProps.containsKey("value.deserializer"));
-    assertTrue(configProps.containsKey(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG));
-    assertTrue(configProps.containsKey(ConsumerConfig.GROUP_ID_CONFIG));
-    assertTrue(configProps.containsValue("myId"));
-  }
-
-  private Properties getTestcontainerProperties() {
-    final Properties props = new Properties();
-    props.put(Config.KAFKA_SERVER_CONFIG_KEY, kafkaTestContainer.getBootstrapServers());
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestContainer.getBootstrapServers());
-    return props;
-  }
+    private Properties getTestcontainerProperties() {
+        final Properties props = new Properties();
+        props.put(Config.KAFKA_SERVER_CONFIG_KEY, kafkaTestContainer.getBootstrapServers());
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestContainer.getBootstrapServers());
+        return props;
+    }
 
 }
