@@ -19,14 +19,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class ConsumerImpl extends AbstractWorkflow implements Consumer {
 
-  private final KafkaConsumer<String, String> kafkaConsumer;
+  private final KafkaConsumer<String, Object> kafkaConsumer;
   private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
   /**
    * Function processing consumed records
    */
   @Setter
-  private java.util.function.Consumer<? super ConsumerRecord<String, String>> recordConsumer;
+  private java.util.function.Consumer<? super ConsumerRecord<String, Object>> recordConsumer;
 
   /**
    * Topic poll interval in milliseconds
@@ -35,7 +35,7 @@ public class ConsumerImpl extends AbstractWorkflow implements Consumer {
   private long pollTime = 1000;
 
   @Builder
-  protected ConsumerImpl(Properties configProps, String topic, String clientId, java.util.function.Consumer<? super ConsumerRecord<String, String>> consumer) {
+  protected ConsumerImpl(Properties configProps, String topic, String clientId, java.util.function.Consumer<? super ConsumerRecord<String, Object>> consumer) {
     super(configProps, topic, clientId);
     this.kafkaConsumer = new KafkaConsumer<>(getConfigProps());
     this.recordConsumer = consumer;

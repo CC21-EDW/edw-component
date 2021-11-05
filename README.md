@@ -18,7 +18,7 @@ Base component used for service connectors providing base functionality
  <repository>
   <id>github</id>
   <name>GitHub CC21-EDW Apache Maven Packages</name>
-  <url>https://maven.pkg.github.com/CC21-EDW/</url>
+  <url>https://maven.pkg.github.com/CC21-EDW/edw-component</url>
   <releases><enabled>true</enabled></releases>
 </repository>
 ```
@@ -59,7 +59,7 @@ class ConsumerTest extends Consumer {
 
 #### Example for Producer
 ```Java
-final Producer producer = new Producer(new Properties(), "CC21_EDW_2128", "stravaConnect");
+final Producer producer = Producer.create(new Properties(), "CC21_EDW_2128", "stravaConnect");
 producer.pushEvent("CC21_EDW_2128", "MyKey", "Hello World").get();
 ```
 

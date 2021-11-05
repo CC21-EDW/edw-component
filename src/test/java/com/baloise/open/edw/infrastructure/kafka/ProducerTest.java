@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class ProducerTest {
 
-/*
+
   public static void main(String[] args) throws ExecutionException, InterruptedException {
-    final String topic = "CC21_EDW_1140";
-    final Producer producer = new Producer(new Properties(), topic, "stravaConnect");
-    producer.pushEvent(topic, "MyKey", "Hello World 3 ").get();
+    final String topic = "lz.edw.strava-connect.activity";
+    final Producer producer = Producer.create(new Properties(), topic, "SportsRepoTest");
+    producer.pushEvent( "I was here!").get();
   }
-*/
+
 
   @Container
   public static KafkaContainer kafkaTestContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.3.2"));
