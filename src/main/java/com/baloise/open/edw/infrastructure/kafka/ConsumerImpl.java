@@ -47,12 +47,13 @@ public class ConsumerImpl extends AbstractWorkflow implements Consumer {
     log.info("run consumer");
     try {
       kafkaConsumer.subscribe(Collections.singleton(getTopic()));
-      pushStatusProducerConnected();
+      pushStatusConnected();
       while (!isShutdown.get()) {
         kafkaConsumer.poll(Duration.of(pollTime, ChronoUnit.MILLIS)).forEach(recordConsumer);
       }
     } finally {
       log.info("Consumer shutdown ");
+      pushStatusShutdown();
       kafkaConsumer.close();
     }
   }

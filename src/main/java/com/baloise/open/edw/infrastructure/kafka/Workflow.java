@@ -8,7 +8,7 @@ public interface Workflow {
    * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer is shutting down.
    * To be called in @PostDestroy method of Producer
    */
-  void pushStatusProducerShutdown();
+  void pushStatusShutdown();
 
   /**
    * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer creates new Topic

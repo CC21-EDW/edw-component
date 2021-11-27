@@ -13,7 +13,7 @@ abstract class AbstractWorkflow extends Config implements Workflow{
   }
 
   @Override
-  public void pushStatusProducerShutdown() {
+  public void pushStatusShutdown() {
     final Status status = new Status(getClientId(), getTopic(), Status.EventType.SHUTDOWN);
     pushStatusEvent(status);
     log.info("Disconnected producer with ID '{}' from workflow.", getClientId());
@@ -29,7 +29,7 @@ abstract class AbstractWorkflow extends Config implements Workflow{
   /**
    * Creates a status event in event topic {@link Config#STATUS_TOPIC_NAME} when producer connects
    */
-  void pushStatusProducerConnected() {
+  void pushStatusConnected() {
     final Status status = new Status(getClientId(), getTopic(), Status.EventType.CONNECT);
     pushStatusEvent(status);
     log.info("Connected producer with ID '{}' to workflow.", getClientId());

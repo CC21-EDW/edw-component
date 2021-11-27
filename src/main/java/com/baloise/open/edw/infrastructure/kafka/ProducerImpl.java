@@ -33,7 +33,7 @@ public class ProducerImpl extends AbstractWorkflow implements Producer {
         if (isNewTopic) {
             pushStatusTopicCreated();
         }
-        pushStatusProducerConnected();
+        pushStatusConnected();
     }
 
     private boolean isCreateMissingTopic(Admin admin, String topicName) throws ExecutionException, InterruptedException {
