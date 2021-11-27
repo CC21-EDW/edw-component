@@ -3,7 +3,6 @@ package com.baloise.open.edw.infrastructure.kafka;
 import com.baloise.open.edw.domain.kafka.Status;
 import com.baloise.open.edw.domain.services.CorrelationId;
 import com.baloise.open.edw.infrastructure.kafka.mapper.StatusDtoMapper;
-import com.baloise.open.edw.infrastructure.kafka.model.StatusDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.NewTopic;
