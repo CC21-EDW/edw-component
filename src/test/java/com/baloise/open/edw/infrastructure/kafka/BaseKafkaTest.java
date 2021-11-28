@@ -34,7 +34,7 @@ public class BaseKafkaTest {
      *
      * For example, ‘mock://my-scope-name’ corresponds to ‘MockSchemaRegistry.getClientForScope(“my-scope-name”)’.
      */
-    props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "mock://producerTest_init");
+    props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "mock://test_init");
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "producerTest_init");
     return props;
   }
