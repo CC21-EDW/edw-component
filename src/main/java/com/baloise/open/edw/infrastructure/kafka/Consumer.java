@@ -10,4 +10,5 @@ public interface Consumer extends Workflow, Runnable {
     return new ConsumerImpl(configProps, topic, clientId, consumer);
   }
 
+  void shutdown();
 }

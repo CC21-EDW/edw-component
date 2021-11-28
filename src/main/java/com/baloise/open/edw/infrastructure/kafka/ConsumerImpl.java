@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -22,6 +24,8 @@ public class ConsumerImpl extends AbstractWorkflow implements Consumer {
 
   private final KafkaConsumer<String, Object> kafkaConsumer;
   private final AtomicBoolean isShutdown = new AtomicBoolean(false);
+
+  ExecutorService executorService = Executors.newSingleThreadExecutor();
 
   /**
    * Function processing consumed records
@@ -44,18 +48,7 @@ public class ConsumerImpl extends AbstractWorkflow implements Consumer {
 
   @Override
   public void run() {
-    log.info("run consumer");
-    try {
-      kafkaConsumer.subscribe(Collections.singleton(getTopic()));
-      pushStatusConnected();
-      while (!isShutdown.get()) {
-        kafkaConsumer.poll(Duration.of(pollTime, ChronoUnit.MILLIS)).forEach(recordConsumer);
-      }
-    } finally {
-      log.info("Consumer shutdown ");
-      pushStatusShutdown();
-      kafkaConsumer.close();
-    }
+    executorService.execute(new ConsumerExecutor());
   }
 
   void pushStatusEvent(Status status) {
@@ -67,7 +60,28 @@ public class ConsumerImpl extends AbstractWorkflow implements Consumer {
     }
   }
 
-  void shutdown() {
+  @Override
+  public void shutdown() {
     this.isShutdown.set(true);
+    executorService.shutdown();
+  }
+
+  final class ConsumerExecutor implements Runnable {
+
+    @Override
+    public void run() {
+      log.info("run consumer");
+      try {
+        kafkaConsumer.subscribe(Collections.singleton(getTopic()));
+        pushStatusConnected();
+        while (!isShutdown.get()) {
+          kafkaConsumer.poll(Duration.of(pollTime, ChronoUnit.MILLIS)).forEach(recordConsumer);
+        }
+      } finally {
+        log.info("Consumer shutdown ");
+        pushStatusShutdown();
+        kafkaConsumer.close();
+      }
+    }
   }
 }
