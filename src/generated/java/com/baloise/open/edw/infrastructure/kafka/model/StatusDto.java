@@ -16,10 +16,12 @@ import org.apache.avro.message.SchemaStore;
 @org.apache.avro.specific.AvroGenerated
 public class StatusDto extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = 4348311996335679075L;
+
+
   public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"StatusDto\",\"namespace\":\"com.baloise.open.edw.infrastructure.kafka.model\",\"doc\":\"Provides the data transfer object used to store and retrieve workflow status objects.\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"Provides unique name for a client that has created the event.\"},{\"name\":\"topic\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"Provides unique name for a topic this event is referring to.\"},{\"name\":\"eventType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"Provides the type such as created, shutdown, etc.\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
-  private static SpecificData MODEL$ = new SpecificData();
+  private static final SpecificData MODEL$ = new SpecificData();
 
   private static final BinaryMessageEncoder<StatusDto> ENCODER =
       new BinaryMessageEncoder<StatusDto>(MODEL$, SCHEMA$);
@@ -73,11 +75,11 @@ public class StatusDto extends org.apache.avro.specific.SpecificRecordBase imple
   }
 
   /** Provides unique name for a client that has created the event. */
-   private java.lang.String clientId;
+  private java.lang.String clientId;
   /** Provides unique name for a topic this event is referring to. */
-   private java.lang.String topic;
+  private java.lang.String topic;
   /** Provides the type such as created, shutdown, etc. */
-   private java.lang.String eventType;
+  private java.lang.String eventType;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -225,7 +227,7 @@ public class StatusDto extends org.apache.avro.specific.SpecificRecordBase imple
 
     /** Creates a new Builder */
     private Builder() {
-      super(SCHEMA$);
+      super(SCHEMA$, MODEL$);
     }
 
     /**
@@ -253,7 +255,7 @@ public class StatusDto extends org.apache.avro.specific.SpecificRecordBase imple
      * @param other The existing instance to copy.
      */
     private Builder(com.baloise.open.edw.infrastructure.kafka.model.StatusDto other) {
-      super(SCHEMA$);
+      super(SCHEMA$, MODEL$);
       if (isValidValue(fields()[0], other.clientId)) {
         this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
         fieldSetFlags()[0] = true;
